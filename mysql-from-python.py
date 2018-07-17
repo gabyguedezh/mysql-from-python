@@ -12,13 +12,12 @@ connection = pymysql.connect(host='localhost',
                                 db='Chinook')
 
 try:
-    #Run a query
-    with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-        sql = "SELECT * FROM Genre;"
-        cursor.execute("""CREATE TABLE IF NOT EXISTS
-                            Friends(name char(20), age int, DOB datetime);""")
-        # Note that the above will still display a warning (not error) if the
-        # table already exists
+    with connection.cursor() as cursor:
+        rows = [("bob", 21, "1990-02-06 23:04:56"),
+                ("jim", 56, "1955-05-09 13:12:45"),
+                ("fred", 100, "1911-09-12 01:01:01")]
+        cursor.executemany("INSERT INTO Friends VALUES (%s, %s, %s);", rows)
+        connection.commit()
         
 finally:
     #Close the connection, regardless of whether the above was successful

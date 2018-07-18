@@ -13,7 +13,9 @@ connection = pymysql.connect(host='localhost',
 
 try:
     with connection.cursor() as cursor:
-        row = cursor.executemany("DELETE FROM Friends WHERE Name = %s;", ['Bob', 'Jim'])
+        list_of_names = ['fred']
+        format_string = ",".join(['%s']*len(list_of_names))
+        cursor.execute("DELETE FROM Friends WHERE Name IN ({});".format(format_string), list_of_names)
         connection.commit()
         
 finally:
